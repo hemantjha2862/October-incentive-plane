@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Vidya - October 2026 Incentive Calculator</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              blue: '#1546D8',
+              darkBlue: '#0A2540',
+              orange: '#FF7A00',
+              lightBlue: '#EFF4FF',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @media print {
+      .print\:hidden { display: none !important; }
+      body { background: white !important; }
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-[#F4F7FC] text-slate-800 font-sans antialiased min-h-screen selection:bg-brand-blue selection:text-white pb-16">
+
+  <!-- Floating Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-medium border border-slate-700 transition-all duration-300 transform translate-y-[-100px] opacity-0 pointer-events-none">
+    <i data-lucide="sparkles" class="w-4 h-4 text-brand-orange"></i>
+    <span id="toast-text">Notification message</span>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="bg-gradient-to-r from-brand-blue via-blue-700 to-brand-darkBlue text-white shadow-xl sticky top-0 z-40 print:hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        
+        <div class="flex items-center gap-4">
+          <!-- LOGO CONTAINER (logo.png Slot) -->
+          <div class="h-12 w-auto min-w-[120px] max-w-[180px] bg-white/10 backdrop-blur-md rounded-xl p-2 flex items-center justify-center border border-white/20 shadow-inner">
+            <img 
+              src="logo.png" 
+              alt="College Vidya Logo" 
+              class="h-full w-auto object-contain" 
+              onerror="this.onerror=null; this.parentNode.innerHTML='<span class=\'text-white font-extrabold tracking-tight text-sm px-2\'>COLLEGE VIDYA</span>';"
+            />
+          </div>
+
+          <div class="border-l border-white/20 pl-4">
+            <div class="flex items-center gap-2">
+              <span class="bg-brand-orange text-white text-[10px] font-extrabold uppercase px-2 py-0.5 rounded tracking-wider shadow-sm">
+                Official HR Tool
+              </span>
+              <span class="bg-white/15 text-blue-100 text-xs px-2.5 py-0.5 rounded-full font-medium flex items-center gap-1">
+                <i data-lucide="calendar" class="w-3 h-3"></i> Oct 2026 Cycle
+              </span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white mt-0.5">
+              Incentive Calculator
+            </h1>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 self-end sm:self-center">
+          <span class="text-xs text-blue-100 bg-white/10 border border-white/15 px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-medium shadow-sm">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+            Verified October 2026 Policy
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Subtitle Bar -->
+  <div class="bg-white border-b border-slate-200/80 py-3 shadow-sm print:hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm text-slate-600">
+      <p class="flex items-center gap-2 font-medium">
+        <i data-lucide="info" class="w-4 h-4 text-brand-blue shrink-0"></i>
+        Calculate your monthly collection incentive based on revenue target and admission achievement.
+      </p>
+      <div class="flex items-center gap-3 font-semibold text-brand-blue">
+        <span>Target Currency: INR (₹)</span>
+        <span>•</span>
+        <span>Unrounded Precision Engine</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+    
+    <!-- Presets Toolbar -->
+    <section class="glass-card rounded-2xl p-4 shadow-sm border border-slate-200/80 mb-6 print:hidden">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-slate-700 font-bold text-sm">
+          <i data-lucide="sparkles" class="w-4 h-4 text-brand-orange"></i>
+          <span>Quick Test Scenarios:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <button type="button" onclick="loadPreset('sample')" class="text-xs font-semibold bg-blue-50 text-brand-blue hover:bg-blue-100 border border-blue-200 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Sample Case (₹7L / 120%)
+          </button>
+          <button type="button" onclick="loadPreset('star')" class="text-xs font-semibold bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+            <i data-lucide="award" class="w-3.5 h-3.5 text-amber-600"></i> Star Performer (200%+)
+          </button>
+          <button type="button" onclick="loadPreset('rev_shortfall')" class="text-xs font-semibold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+            <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Revenue Below 100%
+          </button>
+          <button type="button" onclick="loadPreset('adm_shortfall')" class="text-xs font-semibold bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+            <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-orange-600"></i> Admission Shortfall (&lt;50%)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form & Dashboard Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT COLUMN: Form Inputs -->
+      <div class="lg:col-span-5 space-y-6 print:hidden">
+        <div class="bg-white rounded-3xl shadow-lg border border-slate-200/90 overflow-hidden">
+          <div class="bg-gradient-to-r from-slate-900 via-brand-darkBlue to-brand-blue text-white px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="user" class="w-5 h-5 text-brand-orange"></i>
+              <h2 class="font-bold text-lg">Counselor Metrics Input</h2>
+            </div>
+            <span class="text-xs text-blue-200 font-medium">October 2026</span>
+          </div>
+
+          <form id="calculator-form" onsubmit="handleCalculate(event)" class="p-6 space-y-5">
+            
+            <!-- Error Banner -->
+            <div id="validation-error" class="hidden bg-rose-50 border-l-4 border-rose-500 text-rose-800 p-4 rounded-r-xl text-xs font-semibold flex items-start gap-2.5">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+              <span id="error-message">Please fill in all mandatory fields.</span>
+            </div>
+
+            <!-- Counselor Name -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i> Counselor Name <span class="text-slate-400 font-normal lowercase">(optional)</span>
+              </label>
+              <input type="text" id="counselorName" placeholder="e.g. Priya Sharma" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent text-sm transition font-medium text-slate-800" />
+            </div>
+
+            <!-- Section A: Collection Details -->
+            <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-100/80 space-y-4">
+              <div class="flex items-center gap-2 border-b border-blue-200/60 pb-2">
+                <i data-lucide="dollar-sign" class="w-4 h-4 text-brand-blue"></i>
+                <h3 class="text-xs font-bold text-brand-blue uppercase tracking-wider">
+                  Section A: Collection / Revenue Details
+                </h3>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                  1. Monthly Collection Target (₹) <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-bold text-sm">₹</span>
+                  <input type="number" min="1" step="any" required id="collTarget" placeholder="e.g. 700000" oninput="updateLiveFormatted('collTarget', 'collTargetFormatted')" class="w-full pl-8 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue text-sm font-bold text-slate-800" />
+                </div>
+                <p id="collTargetFormatted" class="text-[11px] text-slate-500 mt-1 pl-1 hidden"></p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                  2. Actual Collection Achieved (₹) <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-bold text-sm">₹</span>
+                  <input type="number" min="0" step="any" required id="collAchieved" placeholder="e.g. 840000" oninput="updateLiveFormatted('collAchieved', 'collAchievedFormatted')" class="w-full pl-8 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-blue text-sm font-bold text-slate-800" />
+                </div>
+                <p id="collAchievedFormatted" class="text-[11px] text-slate-500 mt-1 pl-1 hidden"></p>
+              </div>
+            </div>
+
+            <!-- Section B: Admission Details -->
+            <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200/60 space-y-4">
+              <div class="flex items-center gap-2 border-b border-amber-200/60 pb-2">
+                <i data-lucide="users" class="w-4 h-4 text-brand-orange"></i>
+                <h3 class="text-xs font-bold text-amber-900 uppercase tracking-wider">
+                  Section B: Admission Details
+                </h3>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                  3. Monthly Admission Target (Admissions) <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <input type="number" min="1" step="1" required id="admTarget" placeholder="e.g. 10" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-orange text-sm font-bold text-slate-800" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                  4. Actual Admissions Achieved (Admissions) <span class="text-rose-500 font-bold">*</span>
+                </label>
+                <input type="number" min="0" step="1" required id="admAchieved" placeholder="e.g. 9" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-orange text-sm font-bold text-slate-800" />
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="pt-2 flex flex-col sm:flex-row gap-3">
+              <button type="submit" class="flex-1 bg-brand-orange hover:bg-orange-600 active:scale-[0.99] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-orange-500/25 transition flex items-center justify-center gap-2 cursor-pointer text-sm">
+                <i data-lucide="calculator" class="w-4 h-4"></i>
+                <span>Calculate My Incentive</span>
+              </button>
+              <button type="button" onclick="handleReset()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3.5 px-4 rounded-xl border border-slate-300 transition flex items-center justify-center gap-1.5 cursor-pointer text-sm">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                <span>Reset</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- October Policy Rules Card -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm text-xs space-y-3">
+          <h4 class="font-bold text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="help-circle" class="w-4 h-4 text-brand-blue"></i> Key Rule Checklist (October 2026)
+          </h4>
+          <ul class="space-y-2 text-slate-600 list-disc pl-4 leading-relaxed">
+            <li><strong class="text-slate-800">Minimum Revenue Threshold:</strong> Revenue achievement must be ≥ 100% to earn any incentive.</li>
+            <li><strong class="text-slate-800">Full Revenue Rate:</strong> Rate is applied on total revenue achieved, not just the excess over target.</li>
+            <li><strong class="text-slate-800">Admission Multiplier:</strong> Admission achievement adjusts the earned collection incentive by 0% to 110%.</li>
+            <li><strong class="text-slate-800">Admission Floor:</strong> Admission achievement &lt; 50% results in ₹0 payout regardless of revenue.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Dashboard & Calculations -->
+      <div id="results-dashboard" class="lg:col-span-7 space-y-6">
+        
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="bg-white rounded-3xl border-2 border-dashed border-slate-300 p-12 text-center space-y-4 shadow-sm">
+          <div class="w-16 h-16 bg-blue-50 text-brand-blue rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+            <i data-lucide="bar-chart-3" class="w-8 h-8"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-800">Ready to Calculate</h3>
+            <p class="text-sm text-slate-500 max-w-md mx-auto mt-1">
+              Enter your October collection and admission details on the left or select a sample preset scenario to calculate your incentive.
+            </p>
+          </div>
+          <div class="flex justify-center pt-2">
+            <button type="button" onclick="loadPreset('sample')" class="bg-brand-blue text-white hover:bg-blue-700 text-xs font-semibold px-5 py-3 rounded-xl transition flex items-center gap-2 cursor-pointer shadow-md">
+              <i data-lucide="sparkles" class="w-4 h-4"></i> Load Sample Scenario (₹11,340 Incentive)
+            </button>
+          </div>
+        </div>
+
+        <!-- ACTIVE RESULTS CONTAINER -->
+        <div id="results-container" class="hidden space-y-6">
+          
+          <!-- HERO CARD: Final Payable Incentive -->
+          <div class="bg-gradient-to-br from-brand-blue via-blue-800 to-slate-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden border border-blue-500/20">
+            <div class="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-brand-orange/20 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="relative z-10 space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span class="text-blue-200 text-xs font-bold uppercase tracking-wider block">
+                    Estimated Monthly Payout
+                  </span>
+                  <p class="text-sm font-medium text-white/90 mt-0.5">
+                    Counselor: <span id="res-counselor-name" class="font-bold text-white underline underline-offset-4">Counselor</span>
+                  </p>
+                </div>
+
+                <!-- Status Badge -->
+                <div id="res-status-badge" class="px-3.5 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 shadow-md bg-emerald-500 text-white">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                  <span id="res-status-badge-text">Incentive Qualified</span>
+                </div>
+              </div>
+
+              <!-- Payout Value -->
+              <div class="py-2">
+                <div id="res-final-incentive" class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+                  ₹0
+                </div>
+                <p id="res-calc-note" class="text-xs text-blue-200 mt-1 font-medium">
+                  Calculated based on 0.00% gross rate & 0% admission adjustment factor.
+                </p>
+              </div>
+
+              <!-- Status Message Box -->
+              <div id="res-status-message" class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 text-xs sm:text-sm leading-relaxed text-blue-50">
+                Congratulations!
+              </div>
+
+              <!-- Hero Actions -->
+              <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-white/15 print:hidden">
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="copySummaryToClipboard()" class="bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer backdrop-blur-xs">
+                    <i data-lucide="copy" class="w-3.5 h-3.5 text-amber-300"></i> Copy Summary
+                  </button>
+                  <button type="button" onclick="window.print()" class="bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer backdrop-blur-xs">
+                    <i data-lucide="printer" class="w-3.5 h-3.5 text-blue-200"></i> Print / Export PDF
+                  </button>
+                </div>
+                <span class="text-[11px] text-blue-200 font-semibold">October 2026 Cycle</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8 CARD METRIC GRID -->
+          <div>
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-brand-blue"></i>
+              Incentive Metrics Summary (8-Card Dashboard)
+            </h3>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+              <!-- Card 1 -->
+              <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
+                <span class="text-[11px] font-bold text-slate-500 uppercase block">1. Revenue Target</span>
+                <p id="res-card-target-c" class="text-base font-extrabold text-slate-900">₹0</p>
+                <span class="text-[10px] font-medium text-slate-400 block">Monthly Goal</span>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
+                <span class="text-[11px] font-bold text-slate-500 uppercase block">2. Actual Collection</span>
+                <p id="res-card-achieved-c" class="text-base font-extrabold text-slate-900">₹0</p>
+                <div id="res-card-rev-diff" class="text-[10px] font-bold text-emerald-600">
+                  +₹0 excess
+                </div>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
+                <span class="text-[11px] font-bold text-slate-500 uppercase block">3. Collection Achieved</span>
+                <p id="res-card-coll-pct" class="text-base font-extrabold text-brand-blue">0%</p>
+                <span id="res-card-coll-slab" class="text-[10px] font-bold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded inline-block truncate max-w-full">
+                  Below 100%
+                </span>
+              </div>
+
+              <!-- Card 4 -->
+              <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
+                <span class="text-[11px] font-bold text-slate-500 uppercase block">4. Collection Rate</span>
+                <p id="res-card-rate" class="text-base font-extrabold text-amber-600">0%</p>
+                <span class="text-[10px] font-medium text-slate-500 block">Slab Percentage</span>
+              </div>
+
+              <!-- Card 5 -->
+              <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
+                <span class="text-[11px] font-bold text-slate-500 uppercase block">5. Gross Incentive</span>
+                <p id="res-card-gross" class="text-base font-extrabold text-slate-900">₹0</p>
+                <span class="text-[10px] font-medium text-slate-400 block">Pre-Multiplier</span>
+              </div>
+
+              <!-- Card 6 -->
+              <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
+                <span class="text-[11px] font-bold text-slate-500 uppercase block">6. Admissions %</span>
+                <p id="res-card-adm-pct" class="text-base font-extrabold text-brand-orange">0%</p>
+                <span id="res-card-adm-ratio" class="text-[10px] font-bold text-slate-600 block">
+                  0 / 0 Admissions
+                </span>
+              </div>
+
+              <!-- Card 7 -->
+              <div class="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
+                <span class="text-[11px] font-bold text-slate-500 uppercase block">7. Admission Factor</span>
+                <p id="res-card-adm-factor" class="text-base font-extrabold text-indigo-700">0%</p>
+                <span class="text-[10px] font-medium text-slate-500 block">Payable Multiplier</span>
+              </div>
+
+              <!-- Card 8 -->
+              <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-4 rounded-2xl border border-emerald-300 shadow-sm space-y-1">
+                <span class="text-[11px] font-extrabold text-emerald-800 uppercase block">8. Final Payable</span>
+                <p id="res-card-final" class="text-base font-black text-emerald-700">₹0</p>
+                <span class="text-[10px] font-bold text-emerald-600 block">Net Incentive</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROGRESS GAUGES -->
+          <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-6">
+            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="trending-up" class="w-4 h-4 text-brand-blue"></i>
+              Achievement Progress Bars & Threshold Markers
+            </h3>
+
+            <!-- Gauge 1: Revenue Progress -->
+            <div class="space-y-2">
+              <div class="flex justify-between text-xs font-bold text-slate-700">
+                <span class="flex items-center gap-1.5">
+                  <i data-lucide="dollar-sign" class="w-3.5 h-3.5 text-brand-blue"></i>
+                  Collection Target Achievement Progress
+                </span>
+                <span id="gauge-coll-val" class="text-brand-blue font-extrabold">0%</span>
+              </div>
+
+              <div class="relative w-full bg-slate-100 h-4 rounded-full overflow-hidden p-0.5 border border-slate-200">
+                <div id="gauge-coll-bar" class="h-full rounded-full transition-all duration-700 bg-brand-blue" style="width: 0%"></div>
+              </div>
+
+              <div class="flex justify-between text-[10px] font-semibold text-slate-500 pt-1">
+                <span>0%</span>
+                <span>100% (1%)</span>
+                <span>120% (1.5%)</span>
+                <span>140% (2%)</span>
+                <span>175% (2.5%)</span>
+                <span>200%+ (3%)</span>
+              </div>
+            </div>
+
+            <!-- Gauge 2: Admission Progress -->
+            <div class="space-y-2 pt-3 border-t border-slate-100">
+              <div class="flex justify-between text-xs font-bold text-slate-700">
+                <span class="flex items-center gap-1.5">
+                  <i data-lucide="users" class="w-3.5 h-3.5 text-brand-orange"></i>
+                  Admission Target Achievement Progress
+                </span>
+                <span id="gauge-adm-val" class="text-brand-orange font-extrabold">0%</span>
+              </div>
+
+              <div class="relative w-full bg-slate-100 h-4 rounded-full overflow-hidden p-0.5 border border-slate-200">
+                <div id="gauge-adm-bar" class="h-full rounded-full transition-all duration-700 bg-brand-orange" style="width: 0%"></div>
+              </div>
+
+              <div class="flex justify-between text-[10px] font-semibold text-slate-500 pt-1">
+                <span>&lt;50% (0)</span>
+                <span>50%</span>
+                <span>60%</span>
+                <span>70%</span>
+                <span>80%</span>
+                <span>90%</span>
+                <span>100%+ (110%)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABS & TABLES -->
+          <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+            <div class="flex border-b border-slate-200 bg-slate-50/60 p-1.5">
+              <button type="button" id="tab-btn-breakdown" onclick="switchTab('breakdown')" class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer bg-white text-brand-blue shadow-sm">
+                <i data-lucide="calculator" class="w-4 h-4"></i> Step-By-Step Breakdown
+              </button>
+              <button type="button" id="tab-btn-slabs" onclick="switchTab('slabs')" class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Slab Reference Matrix
+              </button>
+            </div>
+
+            <!-- TAB 1 CONTENT -->
+            <div id="tab-content-breakdown" class="p-6 space-y-4">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-brand-orange"></i>
+                Mathematical Calculation Audit Trail
+              </h4>
+
+              <div class="space-y-3 text-xs">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
+                  <div class="flex items-center justify-between font-bold text-slate-800 mb-1">
+                    <span>Step 1: Collection Achievement Percentage</span>
+                    <span id="step1-val" class="text-brand-blue font-mono">0.00%</span>
+                  </div>
+                  <p class="text-slate-600">Formula: <code class="bg-slate-200/70 px-1.5 py-0.5 rounded text-[11px] font-mono">(Actual Collection ÷ Collection Target) × 100</code></p>
+                  <p id="step1-calc" class="text-slate-500 mt-1 font-mono">= (₹0 ÷ ₹0) × 100 = 0%</p>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
+                  <div class="flex items-center justify-between font-bold text-slate-800 mb-1">
+                    <span>Step 2: Gross Collection Incentive</span>
+                    <span id="step2-val" class="text-amber-700 font-mono">₹0</span>
+                  </div>
+                  <p id="step2-slab" class="text-slate-600">Applicable Collection Rate: <strong class="text-slate-800">0.00%</strong></p>
+                  <p id="step2-calc" class="text-slate-500 mt-1 font-mono">= ₹0 × 0% = ₹0</p>
+                </div>
+
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/80">
+                  <div class="flex items-center justify-between font-bold text-slate-800 mb-1">
+                    <span>Step 3: Admission Achievement & Multiplier Factor</span>
+                    <span id="step3-val" class="text-indigo-700 font-mono">0% Multiplier</span>
+                  </div>
+                  <p id="step3-adm" class="text-slate-600">Admission Achievement: <strong class="text-slate-800">0%</strong></p>
+                  <p id="step3-calc" class="text-slate-500 mt-1 font-mono">Factor Slab: Applicable Factor = 0%</p>
+                </div>
+
+                <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200">
+                  <div class="flex items-center justify-between font-bold text-emerald-900 mb-1">
+                    <span>Step 4: Net Final Incentive Calculation</span>
+                    <span id="step4-val" class="text-emerald-700 text-sm font-black font-mono">₹0</span>
+                  </div>
+                  <p class="text-emerald-800">Formula: <code class="bg-emerald-100 px-1.5 py-0.5 rounded text-[11px] font-mono">Gross Incentive × Admission Factor</code></p>
+                  <p id="step4-calc" class="text-emerald-700 mt-1 font-mono">= ₹0 × 0% = ₹0</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2 CONTENT -->
+            <div id="tab-content-slabs" class="hidden p-6 space-y-6">
+              <!-- Collection Slabs Table -->
+              <div>
+                <h4 class="text-xs font-bold text-brand-blue uppercase tracking-wider mb-2 flex items-center justify-between">
+                  <span>1. Collection Achievement Slabs (October 2026)</span>
+                  <span class="text-[10px] font-normal text-slate-500">Applied on Total Collection</span>
+                </h4>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                  <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-100 text-slate-700 font-bold uppercase text-[10px]">
+                      <tr>
+                        <th class="p-3">Collection Achievement %</th>
+                        <th class="p-3">Incentive Rate</th>
+                        <th class="p-3">Tier Badge</th>
+                        <th class="p-3 text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="collection-slabs-body" class="divide-y divide-slate-200">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Admission Multiplier Table -->
+              <div>
+                <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wider mb-2 flex items-center justify-between">
+                  <span>2. Admission Achievement Multiplier Factor</span>
+                  <span class="text-[10px] font-normal text-slate-500">Applied on Gross Incentive</span>
+                </h4>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                  <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-100 text-slate-700 font-bold uppercase text-[10px]">
+                      <tr>
+                        <th class="p-3">Admission Achievement %</th>
+                        <th class="p-3">Payable Factor</th>
+                        <th class="p-3">Adjustment Effect</th>
+                        <th class="p-3 text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admission-slabs-body" class="divide-y divide-slate-200">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 print:mt-4">
+    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm text-center space-y-3">
+      <div class="flex items-center justify-center gap-2 text-slate-800 font-bold text-sm">
+        <i data-lucide="shield-check" class="w-4 h-4 text-brand-blue"></i>
+        <span>College Vidya Internal Counselor Incentive Portal</span>
+      </div>
+      <p class="text-xs text-slate-500 max-w-3xl mx-auto leading-relaxed">
+        <strong>Disclaimer:</strong> This calculator provides an estimate based on the October 2026 incentive structure. Actual payouts are subject to official company policy, verification of collections, and eligibility verification by HR/Finance.
+      </p>
+      <div class="pt-2 text-[11px] text-slate-400 font-medium flex items-center justify-center gap-4">
+        <span>© October 2026 College Vidya</span>
+        <span>•</span>
+        <span>Internal HR Tool</span>
+        <span>•</span>
+        <span>Confidential</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CALCULATOR LOGIC SCRIPT -->
+  <script>
+    // Slab Configurations
+    const COLLECTION_SLABS = [
+      { id: 'c1', minPct: 0, maxPct: 100, rate: 0.00, label: 'Below 100%', badge: 'Tier 0 - No Incentive' },
+      { id: 'c2', minPct: 100, maxPct: 120, rate: 1.00, label: '100% to < 120%', badge: 'Tier 1 - Standard' },
+      { id: 'c3', minPct: 120, maxPct: 140, rate: 1.50, label: '120% to < 140%', badge: 'Tier 2 - Bronze' },
+      { id: 'c4', minPct: 140, maxPct: 175, rate: 2.00, label: '140% to < 175%', badge: 'Tier 3 - Silver' },
+      { id: 'c5', minPct: 175, maxPct: 200, rate: 2.50, label: '175% to < 200%', badge: 'Tier 4 - Gold' },
+      { id: 'c6', minPct: 200, maxPct: Infinity, rate: 3.00, label: '200% and above', badge: 'Tier 5 - Platinum Super' },
+    ];
+
+    const ADMISSION_SLABS = [
+      { id: 'a1', minPct: 100, maxPct: Infinity, factor: 110, label: '100% and above', badge: '110% Multiplier Bonus' },
+      { id: 'a2', minPct: 90, maxPct: 100, factor: 90, label: '90% to < 100%', badge: '90% Multiplier' },
+      { id: 'a3', minPct: 80, maxPct: 90, factor: 80, label: '80% to < 90%', badge: '80% Multiplier' },
+      { id: 'a4', minPct: 70, maxPct: 80, factor: 70, label: '70% to < 80%', badge: '70% Multiplier' },
+      { id: 'a5', minPct: 60, maxPct: 70, factor: 60, label: '60% to < 70%', badge: '60% Multiplier' },
+      { id: 'a6', minPct: 50, maxPct: 60, factor: 50, label: '50% to < 60%', badge: '50% Multiplier' },
+      { id: 'a7', minPct: 0, maxPct: 50, factor: 0, label: 'Below 50%', badge: '0% - Disqualified' },
+    ];
+
+    let currentResult = null;
+
+    // Formatting Helpers
+    function formatINR(val) {
+      if (val === null || val === undefined || isNaN(val)) return '₹0';
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 0
+      }).format(val);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.innerText = message;
+      toast.classList.remove('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    function updateLiveFormatted(inputId, targetId) {
+      const val = parseFloat(document.getElementById(inputId).value);
+      const targetEl = document.getElementById(targetId);
+      if (!isNaN(val) && val > 0) {
+        targetEl.innerText = 'Formatted: ' + formatINR(val);
+        targetEl.classList.remove('hidden');
+      } else {
+        targetEl.classList.add('hidden');
+      }
+    }
+
+    // Main Compute Function
+    function computeIncentive(counselorName, collTarget, collAchieved, admTarget, admAchieved) {
+      const targetC = parseFloat(collTarget) || 0;
+      const achievedC = parseFloat(collAchieved) || 0;
+      const targetA = parseInt(admTarget, 10) || 0;
+      const achievedA = parseInt(admAchieved, 10) || 0;
+
+      if (targetC <= 0 || targetA <= 0) {
+        return { isValid: false, errorMessage: 'Collection and Admission Targets must be greater than zero.' };
+      }
+      if (achievedC < 0 || achievedA < 0) {
+        return { isValid: false, errorMessage: 'Achieved values cannot be negative.' };
+      }
+
+      const collPct = (achievedC / targetC) * 100;
+
+      let activeCollSlab = COLLECTION_SLABS[0];
+      if (collPct >= 200) activeCollSlab = COLLECTION_SLABS[5];
+      else if (collPct >= 175) activeCollSlab = COLLECTION_SLABS[4];
+      else if (collPct >= 140) activeCollSlab = COLLECTION_SLABS[3];
+      else if (collPct >= 120) activeCollSlab = COLLECTION_SLABS[2];
+      else if (collPct >= 100) activeCollSlab = COLLECTION_SLABS[1];
+
+      const collRatePct = activeCollSlab.rate;
+      const grossIncentive = collPct >= 100 ? achievedC * (collRatePct / 100) : 0;
+
+      const admPct = (achievedA / targetA) * 100;
+
+      let activeAdmSlab = ADMISSION_SLABS[6];
+      if (admPct >= 100) activeAdmSlab = ADMISSION_SLABS[0];
+      else if (admPct >= 90) activeAdmSlab = ADMISSION_SLABS[1];
+      else if (admPct >= 80) activeAdmSlab = ADMISSION_SLABS[2];
+      else if (admPct >= 70) activeAdmSlab = ADMISSION_SLABS[3];
+      else if (admPct >= 60) activeAdmSlab = ADMISSION_SLABS[4];
+      else if (admPct >= 50) activeAdmSlab = ADMISSION_SLABS[5];
+
+      const admFactorPct = activeAdmSlab.factor;
+      const finalIncentiveUnrounded = grossIncentive * (admFactorPct / 100);
+      const finalIncentive = Math.round((finalIncentiveUnrounded + Number.EPSILON) * 100) / 100;
+
+      const revenueDiff = achievedC - targetC;
+      const admissionDiff = achievedA - targetA;
+
+      let status = 'QUALIFIED';
+      let statusBadge = 'Incentive Qualified';
+      let statusMessage = '';
+
+      if (collPct < 100) {
+        status = 'REVENUE_MISSED';
+        statusBadge = 'No Collection Incentive Earned';
+        statusMessage = 'Collection target achievement is below 100%. At least 100% collection is required to earn an incentive.';
+      } else if (admPct < 50) {
+        status = 'ADMISSION_MISSED';
+        statusBadge = 'No Incentive Payable (<50% Admissions)';
+        statusMessage = 'You reached the revenue target, but admission achievement is under 50%. Minimum 50% admissions are required to unlock payout.';
+      } else {
+        status = 'QUALIFIED';
+        statusBadge = 'Incentive Qualified';
+        statusMessage = `Congratulations! You have unlocked an estimated payout of ${formatINR(finalIncentive)} for October 2026.`;
+      }
+
+      return {
+        isValid: true,
+        counselorName: counselorName.trim() || 'Counselor',
+        targetC,
+        achievedC,
+        targetA,
+        achievedA,
+        collPct,
+        collRatePct,
+        grossIncentive,
+        admPct,
+        admFactorPct,
+        finalIncentive,
+        revenueDiff,
+        admissionDiff,
+        activeCollSlab,
+        activeAdmSlab,
+        status,
+        statusBadge,
+        statusMessage
+      };
+    }
+
+    function handleCalculate(e) {
+      if (e) e.preventDefault();
+
+      const errorDiv = document.getElementById('validation-error');
+      errorDiv.classList.add('hidden');
+
+      const name = document.getElementById('counselorName').value;
+      const targetC = document.getElementById('collTarget').value;
+      const achievedC = document.getElementById('collAchieved').value;
+      const targetA = document.getElementById('admTarget').value;
+      const achievedA = document.getElementById('admAchieved').value;
+
+      if (!targetC || !achievedC || !targetA || !achievedA) {
+        document.getElementById('error-message').innerText = 'Please fill in all mandatory numerical fields.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      const calc = computeIncentive(name, targetC, achievedC, targetA, achievedA);
+      if (!calc.isValid) {
+        document.getElementById('error-message').innerText = calc.errorMessage;
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      currentResult = calc;
+      renderDashboard(calc);
+
+      if (window.innerWidth < 1024) {
+        document.getElementById('results-dashboard').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function renderDashboard(res) {
+      document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('results-container').classList.remove('hidden');
+
+      // Hero
+      document.getElementById('res-counselor-name').innerText = res.counselorName;
+      document.getElementById('res-final-incentive').innerText = formatINR(res.finalIncentive);
+      document.getElementById('res-calc-note').innerText = `Calculated based on ${res.collRatePct.toFixed(2)}% gross rate & ${res.admFactorPct}% admission factor.`;
+      document.getElementById('res-status-message').innerText = res.statusMessage;
+
+      const badgeEl = document.getElementById('res-status-badge');
+      const badgeText = document.getElementById('res-status-badge-text');
+      badgeText.innerText = res.statusBadge;
+
+      if (res.status === 'QUALIFIED') {
+        badgeEl.className = 'px-3.5 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 shadow-md bg-emerald-500 text-white';
+      } else if (res.status === 'ADMISSION_MISSED') {
+        badgeEl.className = 'px-3.5 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 shadow-md bg-amber-500 text-white';
+      } else {
+        badgeEl.className = 'px-3.5 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 shadow-md bg-rose-500 text-white';
+      }
+
+      // 8 Cards
+      document.getElementById('res-card-target-c').innerText = formatINR(res.targetC);
+      document.getElementById('res-card-achieved-c').innerText = formatINR(res.achievedC);
+      
+      const revDiffEl = document.getElementById('res-card-rev-diff');
+      if (res.revenueDiff >= 0) {
+        revDiffEl.innerText = `+${formatINR(res.revenueDiff)} excess`;
+        revDiffEl.className = 'text-[10px] font-bold text-emerald-600';
+      } else {
+        revDiffEl.innerText = `${formatINR(res.revenueDiff)} short`;
+        revDiffEl.className = 'text-[10px] font-bold text-rose-600';
+      }
+
+      document.getElementById('res-card-coll-pct').innerText = `${res.collPct.toFixed(2)}%`;
+      document.getElementById('res-card-coll-slab').innerText = res.activeCollSlab.label;
+      document.getElementById('res-card-rate').innerText = `${res.collRatePct.toFixed(2)}%`;
+      document.getElementById('res-card-gross').innerText = formatINR(res.grossIncentive);
+      document.getElementById('res-card-adm-pct').innerText = `${res.admPct.toFixed(2)}%`;
+      document.getElementById('res-card-adm-ratio').innerText = `${res.achievedA} / ${res.targetA} Admissions`;
+      document.getElementById('res-card-adm-factor').innerText = `${res.admFactorPct}%`;
+      document.getElementById('res-card-final').innerText = formatINR(res.finalIncentive);
+
+      // Gauges
+      document.getElementById('gauge-coll-val').innerText = `${res.collPct.toFixed(1)}%`;
+      const collBar = document.getElementById('gauge-coll-bar');
+      collBar.style.width = `${Math.min(res.collPct / 2.2, 100)}%`;
+
+      document.getElementById('gauge-adm-val').innerText = `${res.admPct.toFixed(1)}%`;
+      const admBar = document.getElementById('gauge-adm-bar');
+      admBar.style.width = `${Math.min(res.admPct, 100)}%`;
+
+      // Breakdown Tab Values
+      document.getElementById('step1-val').innerText = `${res.collPct.toFixed(2)}%`;
+      document.getElementById('step1-calc').innerText = `= (${formatINR(res.achievedC)} ÷ ${formatINR(res.targetC)}) × 100 = ${res.collPct.toFixed(4)}%`;
+
+      document.getElementById('step2-val').innerText = formatINR(res.grossIncentive);
+      document.getElementById('step2-slab').innerHTML = `Applicable Collection Rate: <strong class="text-slate-800">${res.collRatePct.toFixed(2)}%</strong> (${res.activeCollSlab.label})`;
+      document.getElementById('step2-calc').innerText = `= ${formatINR(res.achievedC)} × ${res.collRatePct}% = ${formatINR(res.grossIncentive)}`;
+
+      document.getElementById('step3-val').innerText = `${res.admFactorPct}% Multiplier`;
+      document.getElementById('step3-adm').innerHTML = `Admission Achievement: <strong class="text-slate-800">${res.admPct.toFixed(2)}%</strong> (${res.achievedA} of ${res.targetA} admissions)`;
+      document.getElementById('step3-calc').innerText = `Factor Slab: (${res.activeAdmSlab.label}) → Applicable Factor = ${res.admFactorPct}%`;
+
+      document.getElementById('step4-val').innerText = formatINR(res.finalIncentive);
+      document.getElementById('step4-calc').innerText = `= ${formatINR(res.grossIncentive)} × ${res.admFactorPct}% = ${formatINR(res.finalIncentive)}`;
+
+      // Render Slabs Tables
+      renderSlabsTables(res);
+      lucide.createIcons();
+    }
+
+    function renderSlabsTables(res) {
+      const cBody = document.getElementById('collection-slabs-body');
+      cBody.innerHTML = COLLECTION_SLABS.map(slab => {
+        const isActive = res?.activeCollSlab?.id === slab.id;
+        return `
+          <tr class="transition ${isActive ? 'bg-blue-50/90 font-bold text-brand-blue' : 'hover:bg-slate-50 text-slate-700'}">
+            <td class="p-3">${slab.label}</td>
+            <td class="p-3 font-mono">${slab.rate.toFixed(2)}%</td>
+            <td class="p-3 text-[11px]">${slab.badge}</td>
+            <td class="p-3 text-right">
+              ${isActive ? `<span class="bg-brand-blue text-white text-[10px] px-2 py-0.5 rounded-full font-extrabold uppercase">Active</span>` : `<span class="text-slate-400">-</span>`}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const aBody = document.getElementById('admission-slabs-body');
+      aBody.innerHTML = ADMISSION_SLABS.map(slab => {
+        const isActive = res?.activeAdmSlab?.id === slab.id;
+        return `
+          <tr class="transition ${isActive ? 'bg-amber-50/90 font-bold text-amber-900' : 'hover:bg-slate-50 text-slate-700'}">
+            <td class="p-3">${slab.label}</td>
+            <td class="p-3 font-mono">${slab.factor}%</td>
+            <td class="p-3 text-[11px]">${slab.badge}</td>
+            <td class="p-3 text-right">
+              ${isActive ? `<span class="bg-brand-orange text-white text-[10px] px-2 py-0.5 rounded-full font-extrabold uppercase">Active</span>` : `<span class="text-slate-400">-</span>`}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function switchTab(tabName) {
+      const btnBreakdown = document.getElementById('tab-btn-breakdown');
+      const btnSlabs = document.getElementById('tab-btn-slabs');
+      const contentBreakdown = document.getElementById('tab-content-breakdown');
+      const contentSlabs = document.getElementById('tab-content-slabs');
+
+      if (tabName === 'breakdown') {
+        btnBreakdown.className = 'flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer bg-white text-brand-blue shadow-sm';
+        btnSlabs.className = 'flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900';
+        contentBreakdown.classList.remove('hidden');
+        contentSlabs.classList.add('hidden');
+      } else {
+        btnSlabs.className = 'flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer bg-white text-brand-blue shadow-sm';
+        btnBreakdown.className = 'flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900';
+        contentSlabs.classList.remove('hidden');
+        contentBreakdown.classList.add('hidden');
+      }
+    }
+
+    function loadPreset(presetType) {
+      document.getElementById('validation-error').classList.add('hidden');
+      switch (presetType) {
+        case 'sample':
+          document.getElementById('counselorName').value = 'Priya Sharma';
+          document.getElementById('collTarget').value = '700000';
+          document.getElementById('collAchieved').value = '840000';
+          document.getElementById('admTarget').value = '10';
+          document.getElementById('admAchieved').value = '9';
+          showToast('Sample scenario loaded (₹7L Target / 120% Coll / 90% Adm)');
+          break;
+        case 'star':
+          document.getElementById('counselorName').value = 'Rahul Verma';
+          document.getElementById('collTarget').value = '1000000';
+          document.getElementById('collAchieved').value = '2200000';
+          document.getElementById('admTarget').value = '15';
+          document.getElementById('admAchieved').value = '18';
+          showToast('Star Performer preset loaded (220% Revenue / 120% Admissions)');
+          break;
+        case 'rev_shortfall':
+          document.getElementById('counselorName').value = 'Ankit Patel';
+          document.getElementById('collTarget').value = '800000';
+          document.getElementById('collAchieved').value = '720000';
+          document.getElementById('admTarget').value = '12';
+          document.getElementById('admAchieved').value = '12';
+          showToast('Revenue Below 100% scenario loaded');
+          break;
+        case 'adm_shortfall':
+          document.getElementById('counselorName').value = 'Neha Gupta';
+          document.getElementById('collTarget').value = '600000';
+          document.getElementById('collAchieved').value = '750000';
+          document.getElementById('admTarget').value = '10';
+          document.getElementById('admAchieved').value = '4';
+          showToast('Admission Shortfall (<50%) scenario loaded');
+          break;
+      }
+      updateLiveFormatted('collTarget', 'collTargetFormatted');
+      updateLiveFormatted('collAchieved', 'collAchievedFormatted');
+      handleCalculate();
+    }
+
+    function handleReset() {
+      document.getElementById('calculator-form').reset();
+      document.getElementById('collTargetFormatted').classList.add('hidden');
+      document.getElementById('collAchievedFormatted').classList.add('hidden');
+      document.getElementById('validation-error').classList.add('hidden');
+      document.getElementById('results-container').classList.add('hidden');
+      document.getElementById('empty-state').classList.remove('hidden');
+      currentResult = null;
+      showToast('All fields reset.');
+    }
+
+    function copySummaryToClipboard() {
+      if (!currentResult) return;
+      const res = currentResult;
+      const text = `
+=== COLLEGE VIDYA - OCTOBER 2026 INCENTIVE REPORT ===
+Counselor Name: ${res.counselorName}
+Monthly Collection Target: ${formatINR(res.targetC)}
+Actual Collection Achieved: ${formatINR(res.achievedC)} (${res.collPct.toFixed(2)}% Achievement)
+Collection Incentive Rate: ${res.collRatePct.toFixed(2)}%
+Gross Collection Incentive: ${formatINR(res.grossIncentive)}
+
+Monthly Admission Target: ${res.targetA} Admissions
+Actual Admissions Achieved: ${res.achievedA} Admissions (${res.admPct.toFixed(2)}% Achievement)
+Admission Payable Factor: ${res.admFactorPct}%
+
+----------------------------------------------------
+FINAL PAYABLE INCENTIVE: ${formatINR(res.finalIncentive)}
+Qualification Status: ${res.statusBadge}
+----------------------------------------------------
+Generated on: ${new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
+College Vidya October 2026 Policy
+      `.trim();
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Summary copied to clipboard!');
+      });
+    }
+
+    // Initialize Lucide icons on load
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      renderSlabsTables(null);
+    });
+  </script>
+</body>
+</html>
